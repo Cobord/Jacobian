@@ -1,0 +1,386 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\geometry{letterpaper}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+%%% Theorems and references %%%
+%%% Preamble pruned to exactly the packages, environments, and macros this document uses.
+\usepackage[amsmath,thmmarks]{ntheorem}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+\theoremstyle{change}
+
+\newtheorem{definition}[equation]{Definition}
+\newtheorem{theorem}[equation]{Theorem}
+\newtheorem{prop}[equation]{Proposition}
+\newtheorem{lemma}[equation]{Lemma}
+\newtheorem{cor}[equation]{Corollary}
+\newtheorem{conj}[equation]{Conjecture}
+\newtheorem{problem}[equation]{Problem}
+
+\theorembodyfont{\upshape}
+\theoremsymbol{\ensuremath{\Diamond}}
+\newtheorem{remark}[equation]{Remark}
+
+\theoremstyle{nonumberplain}
+
+\theoremsymbol{\ensuremath{\Box}}
+\newtheorem{proof}{Proof}
+
+\qedsymbol{\ensuremath{\Box}}
+
+\creflabelformat{equation}{#2(#1)#3}
+
+\crefname{equation}{equation}{equations}
+\crefname{definition}{definition}{definitions}
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{prop}{proposition}{propositions}
+\crefname{lemma}{lemma}{lemmas}
+\crefname{cor}{corollary}{corollaries}
+\crefname{conj}{conjecture}{conjectures}
+\crefname{problem}{problem}{problems}
+\crefname{remark}{remark}{remarks}
+\crefname{section}{Section}{Sections}
+\crefname{subsection}{Section}{Sections}
+
+\crefformat{equation}{#2equation~(#1)#3}
+\crefformat{definition}{#2definition~#1#3}
+\crefformat{theorem}{#2Theorem~#1#3}
+\crefformat{prop}{#2proposition~#1#3}
+\crefformat{lemma}{#2lemma~#1#3}
+\crefformat{cor}{#2corollary~#1#3}
+\crefformat{conj}{#2conjecture~#1#3}
+\crefformat{problem}{#2problem~#1#3}
+\crefformat{remark}{#2remark~#1#3}
+\crefformat{section}{#2Section~#1#3}
+\crefformat{subsection}{#2Section~#1#3}
+
+\Crefformat{equation}{#2Equation~(#1)#3}
+\Crefformat{definition}{#2Definition~#1#3}
+\Crefformat{theorem}{#2Theorem~#1#3}
+\Crefformat{prop}{#2Proposition~#1#3}
+\Crefformat{lemma}{#2Lemma~#1#3}
+\Crefformat{cor}{#2Corollary~#1#3}
+\Crefformat{conj}{#2Conjecture~#1#3}
+\Crefformat{problem}{#2Problem~#1#3}
+\Crefformat{remark}{#2Remark~#1#3}
+\Crefformat{section}{#2Section~#1#3}
+\Crefformat{subsection}{#2Section~#1#3}
+
+\numberwithin{equation}{section}
+
+%%% Tikz: only commutative diagrams are used %%%
+
+\usepackage{tikz}
+\usetikzlibrary{cd}
+
+%%% Letters, Symbols, Words: only what appears in the text %%%
+
+\newcommand\NN{{\mathbb N}}
+\newcommand\QQ{{\mathbb Q}}
+
+\newcommand\mono{\hookrightarrow}
+\newcommand\sminus{\smallsetminus}
+\newcommand\st{{\textrm{ s.t.\ }}}
+\newcommand\setof[1]{\{ #1 \}}
+
+\parskip 1ex
+
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\Cent}{Cent}
+\DeclareMathOperator{\Frac}{Frac}
+\DeclareMathOperator{\GL}{GL}
+\DeclareMathOperator{\Iso}{Iso}
+\DeclareMathOperator{\id}{id}
+
+
+\title{Jacobian-Dixmier Monoid}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+
+The explicit counterexample to the Jacobian conjecture in $n=3$ \cite{Alpoge,Speyer,Tao} settles $JC_n$ and $DC_n$ for all $n \geq 3$, but for the present purposes it is only a seed. The object of study here is the structure it seeds: the two-sided action groupoid of $\Aut(W_n)$ on $\End(W_n)$, its $\pi_0$, its isotropy groups, and the monoid of bi-invariant subsets of $\End(W_n)$. We make the seed element $c_{\text{bad}} \in \End(W_3) \sminus \Aut(W_3)$ completely explicit via the Bass--Connell--Wright lift, record what it generates, and record the invariants presently able to separate classes. We then state a deliberately maximal conjecture: that the seed is a generator, and that nothing in the bi-invariant structure is invisible from it. The conjecture is written with the same unearned optimism on which the Jacobian conjecture itself survived for 87 years, and it is stated in order to be attacked. \Cref{targets} specifies exactly what a disproof would consist of and how a candidate is certified, so that this document can serve simultaneously as the opening of a paper and as a self-contained problem specification for a future counterexample search, human or automated.
+
+\end{abstract}
+
+\section{Jacobian and Dixmier Background}
+
+Throughout let $k$ be a field of characteristic $0$.
+
+\begin{definition}[$JC_n (k)$]
+Any polynomial endomorphism $\phi$ of $\text{Spec} \; k[x_1 \cdots x_n]$ over $\text{Spec} \; k$ with Jacobian determinant $1$ is actually a polynomial automorphism.
+\end{definition}
+
+\begin{theorem}[Normalization; Connell -- van den Dries\label{vC}]
+Let $F$ be a polynomial endomorphism of $\mathbb{A}^n_k$ with constant Jacobian determinant $\lambda \in k^\times$.
+\begin{enumerate}
+\item For any $L \in \GL_n(k)$ the composite $L \circ F$ has constant Jacobian determinant $\det(L)\lambda$, and $L \circ F$ is an automorphism if and only if $F$ is. Taking $L = \mathrm{diag}(\lambda^{-1}, 1, \dots, 1)$, any counterexample with nonzero constant Jacobian determinant normalizes to one of determinant exactly $1$, so $JC_n(k)$ as stated above is equivalent to the a priori stronger statement with determinant in $k^\times$.
+\item \cite{CvdD} $JC_n$ holds over every field of characteristic $0$ if and only if it holds over $\QQ$; in particular the truth value of $JC_n(k)$ does not depend on the choice of $k \supseteq \QQ$.
+\end{enumerate}
+\end{theorem}
+
+\begin{definition}[$W_n (k)$]
+The Weyl algebra in $n$ dimensions over $k$ is the unital associative algebra with $2n$ generators $q_i$ and $\partial_i$ with commutation rules $[q_i, \partial_i] = -1$, all other pairs of generators commuting. This is the algebra of polynomial differential operators on $\text{Spec} \; k[q_1 \cdots q_n]$ as the variable names indicate.
+\end{definition}
+
+\begin{definition}[$DC_n (k)$]
+Any endomorphism of $W_n (k)$ is an automorphism. (Endomorphisms are automatically injective since $W_n(k)$ is simple; the content is surjectivity.)
+\end{definition}
+
+\begin{theorem}[Belov-Kanel, Kontsevich \cite{BKK}]
+$DC_n \implies JC_n$ and $JC_{2n} \implies DC_{n}$
+\end{theorem}
+
+The former is the easy direction and it is all we need. The entirety of the aforementioned theorem is focused on the other half of the statement. More specifically we use the contrapositive of the easy half, in the strong constructive form of \cref{lift} below, which produces a counterexample of $DC_n$ from a counterexample of $JC_n$ in the same dimension $n$, without passing through the stable $2n \leftrightarrow n$ correspondence.
+
+\section{The seed\label{seed}}
+
+The counterexample announced by Alp\"oge on 19 July 2026 \cite{Alpoge,Speyer} is the map $F = (a,b,c): \mathbb{A}^3 \to \mathbb{A}^3$ with
+
+\begin{align*}
+a&=(1+xy)^3z+y^2(1+xy)(4+3xy),\\
+b&=y+3x(1+xy)^2z+3xy^2(4+3xy),\\
+c&=2x-3x^2y-x^3z.
+\end{align*}
+
+Its Jacobian determinant is the constant $-2$, and the map is generically $3$-to-$1$ rather than injective. Both facts are finite symbolic computations. For the failure of injectivity it suffices to display a single collision; the fiber over the rational point $(a,b,c) = (0,3,0)$ consists of exactly the three points
+
+\begin{equation*}
+\left( -\tfrac{2}{3},\ 3,\ 18 \right), \qquad \left( 0,\ 3,\ -36 \right), \qquad \left( \tfrac{2}{3},\ -\tfrac{3}{2},\ \tfrac{45}{4} \right).
+\end{equation*}
+
+By \cref{vC}(1), there is also the counterexample with determinant $1$, namely
+
+\begin{align*}
+F_1 := \left( a,\ b,\ -\tfrac{c}{2} \right),
+\end{align*}
+
+which has Jacobian determinant $\left(-\tfrac{1}{2}\right)(-2) = 1$ and the same fibers as $F$ up to the linear change of target coordinates; the displayed fiber over $(0,3,0)$ is literally unchanged since $c$ vanishes there. Write $d(F_1) := [k(x,y,z) : k(F_1)] = 3$ for the degree of the associated field extension; generically $3$-to-$1$ is exactly the statement $d(F_1)=3$.
+
+One structural feature recorded in \cite{Speyer} will matter for the isotropy discussion below: $a, b, c$ are homogeneous of weights $2, 1, -1$ for the grading $\deg(x) = -1$, $\deg(y) = 1$, $\deg(z) = 2$, so $F$ (and $F_1$, whose normalization only rescales $c$) intertwines two one-parameter torus actions.
+
+\section{The lift\label{liftsec}}
+
+The seed enters the noncommutative world through the following construction, essentially the one underlying the easy direction of Belov-Kanel--Kontsevich and going back to Bass--Connell--Wright \cite{BCW}. Because the construction is purely first order, it has a classical output alongside the quantum one; the classical output carries the invariants we can currently compute, so we set both up at once.
+
+\begin{definition}[$P_n(k)$]
+Equip $P_n(k) := k[x_1, \dots, x_n, y_1, \dots, y_n]$ with the canonical symplectic Poisson bracket $\{x_i, y_j\} = \delta_{ij}$, $\{x_i,x_j\} = \{y_i,y_j\} = 0$. This is the semiclassical degeneration of $W_n(k)$, and it is Poisson-simple: a nonzero Poisson ideal is stable under all Hamiltonian derivations, hence under all partial derivatives, hence contains a nonzero constant. So Poisson endomorphisms of $P_n(k)$ are injective, exactly as endomorphisms of $W_n(k)$ are.
+\end{definition}
+
+\begin{prop}[The lift\label{lift}]
+Let $F = (F_1, F_2, F_3)$ be a polynomial endomorphism of $\mathbb{A}^3_k$ with $\det JF = 1$, and let $G := (JF^{\mathsf{T}})^{-1}$, a $3\times 3$ matrix with polynomial entries since $\det JF = 1$ makes the inverse equal to the adjugate. Then:
+\begin{enumerate}
+\item $\Phi_F : x_i \mapsto F_i(x), \; y_j \mapsto \sum_k G_{jk}(x)\, y_k$ defines a Poisson endomorphism of $P_3(k)$;
+\item $\psi_F : q_i \mapsto F_i(q), \; \partial_j \mapsto D_j := \sum_k G_{jk}(q)\, \partial_k$ defines an algebra endomorphism of $W_3(k)$;
+\item if $d(F) > 1$ (in particular if $F$ is generically $3$-to-$1$), then neither $\Phi_F$ nor $\psi_F$ is an automorphism.
+\end{enumerate}
+\end{prop}
+
+\begin{proof}
+(1) The brackets $\{F_i, F_j\} = 0$ are automatic since the $F_i$ depend only on the $x$ variables. For the mixed bracket, $\{F_i, \sum_k G_{jk} y_k\} = \sum_k G_{jk} \, \partial F_i / \partial x_k = (JF \, G^{\mathsf{T}})_{ij} = \delta_{ij}$ by the choice of $G$. The remaining bracket $\{\Phi_F(y_i), \Phi_F(y_j)\} = 0$ is the integrability identity
+\begin{equation}\label{integrability}
+\sum_m \left( G_{jm} \frac{\partial G_{ik}}{\partial x_m} - G_{im} \frac{\partial G_{jk}}{\partial x_m} \right) = 0 \qquad \text{for all } i,j,k,
+\end{equation}
+which holds because $\Phi_F$ is, pointwise, the cotangent lift of $F$: since $\det JF = 1$ everywhere, $F$ is everywhere a local diffeomorphism, its cotangent lift $(x, p) \mapsto (F(x), (JF(x))^{-\mathsf{T}} p)$ is symplectic, and being symplectic is a pointwise condition needing no global inverse. For the specific $F_1$ of \cref{seed}, \cref{integrability} was additionally verified by direct symbolic computation; the entries of $G$ are polynomials of total degree at most $11$.
+
+(2) In $W_3$ with the convention $[f(q), \partial_k] = -\partial f/\partial x_k$, the mixed commutators give $[\psi_F(q_i), \psi_F(\partial_j)] = -\delta_{ij}$ by the identical calculation, and expanding $[D_i, D_j]$ in normal form produces first-order operators whose coefficients are exactly the left side of \cref{integrability}: no ordering corrections arise because the $G_{jk}(q)$ commute among themselves and each $D_j$ is of order one. So $[D_i, D_j] = 0$ and $\psi_F$ is well defined.
+
+(3) For $\Phi_F$: the fraction field of the image is $k(F)(D_1, D_2, D_3)$ where $D_j = \sum G_{jk} y_k$; since $G$ is invertible over $k(x)$, the $y$'s lie in the $k(x)$-span of the $D$'s, so $k(x,y) = k(x)(D_1,D_2,D_3)$ and the $D$'s are algebraically independent over $k(x)$. Hence
+\begin{equation*}
+[k(x,y) : \Frac(\text{im}\, \Phi_F)] = [k(x)(D) : k(F)(D)] = [k(x) : k(F)] = d(F) > 1,
+\end{equation*}
+so $\Phi_F$ is not surjective.
+
+For $\psi_F$: injectivity is free from simplicity of $W_3$. Suppose $\psi_F$ were an automorphism. The centralizer of the commutative subalgebra $k[q] \subset W_3$ is $k[q]$ itself: writing an element in normal form $\sum_\alpha p_\alpha(q) \partial^\alpha$, commuting with each $q_i$ kills every term with $\alpha \neq 0$. Automorphisms transport centralizers, so
+\begin{equation*}
+\Cent_{W_3}\big(k[F]\big) = \Cent_{W_3}\big(\psi_F(k[q])\big) = \psi_F\big(\Cent_{W_3}(k[q])\big) = \psi_F(k[q]) = k[F].
+\end{equation*}
+But $k[q]$ is commutative and contains $k[F]$, so $k[q] \subseteq \Cent_{W_3}(k[F]) = k[F]$. Then each $q_i$ is a polynomial in $F_1, F_2, F_3$, hence $k(x) = k(F)$ and $d(F) = 1$, contradicting $d(F) > 1$.
+\end{proof}
+
+\begin{cor}
+$PC_3(k)$ (every Poisson endomorphism of $P_3(k)$ is an automorphism) and $DC_3(k)$ are both false, witnessed by
+\begin{equation*}
+c_{\text{bad}} := \psi_{F_1} \in \End(W_3(k)) \sminus \Aut(W_3(k)) \qquad \text{and its symbol} \qquad \Phi_{F_1},
+\end{equation*}
+for every field $k$ of characteristic $0$.
+\end{cor}
+
+This closes the counterexample chapter. Everything after this point treats $c_{\text{bad}}$ purely as a distinguished element: the starting point, not the point.
+
+\section{The action groupoid and the bi-invariant monoid\label{monoid}}
+
+$\Aut(W_n)$ acts by left and right multiplication on the monoid $\End(W_n)$
+
+Because we have a set $\End(W_n)$ and a group $\Aut(W_n) \times \Aut(W_n)^{op}$ acting on it, we may form its action groupoid. Denote it $\Aut(W_n) \backslash \backslash \End(W_n) / / \Aut(W_n)$ rather than putting $^{op}$ for the right action.
+
+If we do $\pi_0$ in order to get the quotient instead, we get a pointed set $G_n$. However $\pi_0$ forgets two things: the multiplication law of $\End (W_n)$, and the isotropy. Both are part of the structure this paper is about.
+
+\subsection{Isotropy\label{isotropy}}
+
+The action groupoid is not equivalent to its $\pi_0$: each object $\psi$ carries the isotropy group
+\begin{equation*}
+\Iso(\psi) = \setof{ (a_1, a_2) \in \Aut(W_n) \times \Aut(W_n)^{op} \st a_1 \psi a_2 = \psi },
+\end{equation*}
+an invariant of the class strictly finer than the class itself. At the basepoint, $\Iso(\id) \cong \Aut(W_n)$ antidiagonally. The seed already has visible isotropy: the weighted homogeneity of $(a,b,c)$ recorded in \cref{seed} means the torus automorphisms $t_\lambda$ of $W_3$ with weights $(-1,1,2)$ on $(q_1,q_2,q_3)$ and opposite weights on the $\partial_i$ (these preserve the commutation relations, so are automorphisms) intertwine with the target torus of weights $(2,1,-1)$ to fix $\psi_{F_1}$ on the nose. So $\Iso(c_{\text{bad}})$ contains a one-dimensional torus $\mathbb{G}_m(k)$, and computing it exactly is one of the concrete structure questions below (\cref{isoproblem}).
+
+\subsection{Semi-hypergroup}
+
+One way we could do the multiplication is sending $\big[a_1 f a_2 \big] \times \big[a_3 g a_4 \big] = \underset{a \in \Aut (W_n)}{\bigcup} \big[ a_1 f a g a_4 \big]$ where $a_i \in \Aut (W_n)$ and their appearance on the left or right does not affect the class but it does so in the middle between $f$ and $g$. This is associative in the sense of hyperoperations because of the associativity of the starting monoids.
+
+\subsubsection{Linearization}
+
+A common way of dealing with this is to linearize over some field $\ell$ and then that union becomes a sum on the right hand side of a multiplication defined on basis elements. However that requires more control over the union than we have provided here in order to be useful.
+
+\subsection{Bi-invariant subsets}
+
+Let $\text{BiInv}(\End(W_n))$ be the set of subsets of $\End(W_n)$ that are bi-invariant under the $\Aut (W_n)$ left and right actions. Under elementwise product $S \cdot T = \setof{st \st s \in S, t \in T}$ this is an honest monoid, not merely a hyperstructure: it works directly at the level of the power set rather than having only $P^* (X)$ on the right hand side of a hyperoperation as in all the flavors of hypergroup, and it also carries the complete lattice structure of unions, intersections and set differences of bi-invariant sets.
+
+The empty set serves as an absorbing element on both sides. The subset $\Aut (W_n)$ serves as the left and right unit. The full set $\End (W_n)$ is also absorbing on the ideal of non-units in the following sense made precise by \cref{noreturn}.
+
+\begin{definition}[Generated substructure\label{generated}]
+For a family $\mathcal{S}$ of bi-invariant subsets, let $\langle \mathcal{S} \rangle$ denote the smallest subfamily of $\text{BiInv}(\End(W_n))$ containing $\mathcal{S}$, the unit $\Aut(W_n)$, and the absorbers $\emptyset$ and $\End(W_n)$, and closed under the monoid product, arbitrary unions, and set difference. (Intersections and complements follow from difference.)
+\end{definition}
+
+\subsection{What the seed generates, and the invariants that see it\label{invariants}}
+
+\begin{lemma}[No return to the unit\label{noreturn}]
+Every element of every product class $[c_{\text{bad}}] \cdot [c_{\text{bad}}] \cdots [c_{\text{bad}}]$ is a non-surjective endomorphism. In particular no power of $[c_{\text{bad}}]$ meets the unit class $\Aut(W_n)$: non-surjectivity is a two-sided ideal condition on $\text{BiInv}$, and $[c_{\text{bad}}]$ generates a sub-semigroup avoiding the unit.
+\end{lemma}
+
+\begin{proof}
+A typical element of an $m$-fold product is $a_0 \, \psi_{F_1} \, a_1 \, \psi_{F_1} \cdots a_{m-1} \, \psi_{F_1} \, a_m$ with $a_i \in \Aut(W_3)$; its image is contained in $a_0(\text{im}\, \psi_{F_1}) \neq W_3$.
+\end{proof}
+
+\begin{prop}[Degree grading on the classical side\label{degree}]
+On the parallel structure built from $\Aut$ and $\End$ of the Poisson algebra $P_3(k)$, the assignment $[\Phi] \mapsto \deg[\Phi] := [k(x,y) : \Frac(\text{im}\, \Phi)]$ is well defined on classes and multiplicative on products: Poisson endomorphisms are injective by Poisson-simplicity, automorphisms have degree $1$, and degrees multiply along composites. As $\deg[\Phi_{F_1}] = 3$, the classes of the successive powers of $[\Phi_{F_1}]$ have degrees $3, 9, 27, \dots$ and are pairwise distinct: the classical monoid is infinite, graded by $(\NN_{>0}, \times)$ on the classes reachable from the seed.
+\end{prop}
+
+On the quantum side the corresponding statements are open: the symbol of $\psi_{F_1}$ along the order filtration is $\Phi_{F_1}$, but automorphisms of $W_n$ need not respect the filtration, so the degree does not descend to $G_n$ for free. Producing the quantum degree is \cref{qdegree}. This gap is itself informative: at present, \emph{every} invariant we possess on $G_n$ factors through classical shadows, and the conjecture below is exactly the assertion that nothing lives in the kernel of the shadows. That is the assertion one should distrust.
+
+Note also that composites of lifts are again lifts up to direction of composition, $\psi_F \circ \psi_{F'} = \psi_{F' \circ F}$, so the $m$-th power class contains the lift of the iterate $F_1^{\circ m}$, which is generically $3^m$-to-$1$.
+
+\section{The stabilization chain}
+
+\begin{definition}[$f$ counterexample]
+Let $f : [3] \to [n]$ be an injection of finite sets. For the counterexample $c_{\text{bad}} = \psi_{F_1}$ of $DC_3$ we have above, define the endomorphism $\mathrm{stab}_f(c_{\text{bad}})$ of the larger $W_n (k)$ by identity on $q_i, \partial_i$ for those $i$ not in the image and applying $c_{\text{bad}}$ on the subalgebra $W_3 (k)$ determined by $f$. This is well defined because the two subalgebras commute, and it is again non-surjective, so $DC_n(k)$ is false for all $n \geq 3$; on the commutative side this is the familiar stabilization by adjoining identity coordinates.
+
+By permutation automorphisms, when we quotient on the left and right by $\Aut (W_n)$ then we can ignore the $f$ details but not until then.
+\end{definition}
+
+\begin{definition}[Action groupoid chain]
+
+Give shorthand $G_n \equiv \Aut(W_n) \backslash \backslash \End(W_n) / / \Aut(W_n)$, then
+
+\begin{tikzcd}
+G_3 \arrow[r] & G_4 \arrow[r] & G_5 \arrow[r] & \cdots
+\end{tikzcd}
+
+where the arrows are suppressing several arrows for all possible inclusions of $[n-1] \to [n]$. The choice of inclusion changes the morphism of action groupoids but it does not matter for the $\pi_0$ which is why the other arrows are suppressed in the notation.
+
+\end{definition}
+
+\begin{remark}[Below the chain]
+The chain is drawn starting at $G_3$ because that is where nontriviality is proven. $G_1$ and $G_2$ remain conjecturally trivial, and their triviality is entangled with the surviving planar problem: triviality of $G_2$ is $DC_2$, which implies the still-open $JC_2$, while triviality of $G_1$ is $DC_1$, which would follow from $JC_2$ by \cite{BKK}. Nothing below asserts anything about $n \leq 2$.
+\end{remark}
+
+\section{The conjecture, stated to be attacked\label{conjsec}}
+
+\begin{definition}[Reachable elements]
+Let $L_n \subseteq \End(W_n)$ be the set of all finite words
+\begin{equation*}
+a_0 \, s_1 \, a_1 \, s_2 \cdots s_m \, a_m, \qquad m \geq 0, \quad a_i \in \Aut(W_n), \quad s_j \in \setof{ \mathrm{stab}_f(c_{\text{bad}}) \st f: [3] \mono [n] }.
+\end{equation*}
+Call an endomorphism, or its class in $G_n$, \emph{reachable} if it lies in $L_n$. The case $m = 0$ gives the unit class; by \cref{noreturn} every reachable element with $m \geq 1$ is non-surjective.
+\end{definition}
+
+\begin{conj}[Remaining Optimistic Dixmier\label{ROD}]
+For every $n \geq 3$:
+\begin{enumerate}
+\item (orbit form) $\End(W_n) = L_n$. Every endomorphism of the Weyl algebra is a product of automorphisms and stabilized copies of the single seed $c_{\text{bad}}$; equivalently, the map from words to $G_n$ is surjective.
+\item (monoid form) Consequently $\text{BiInv}(\End(W_n)) = \langle \setof{[w] \st w \in L_n} \rangle$ in the sense of \cref{generated}: every bi-invariant subset is built from reachable classes by products, unions, and set differences.
+\end{enumerate}
+Informally: the July 2026 map is not just a counterexample but a generator, and nothing in the bi-invariant structure of $\End(W_n)$ is invisible from it.
+\end{conj}
+
+\begin{remark}[Epistemic status: this conjecture has no right to be true\label{epistemic}]
+The conjecture is stated at maximal strength, and the expectation here is that it is \emph{false}. It is written in deliberate imitation of the epistemic position the Jacobian conjecture occupied for 87 years: no counterexample was found, the known obstructions to rigidity all vanished, and the absence of counterexamples was read as evidence for rigidity when it now appears to have measured only the difficulty of the search. That pattern --- known obstructions vanish, rigidity is conjectured, rigidity fails once someone can actually search --- is common in this exact neighborhood. The Markus--Yamabe conjecture held in the plane and fell to an explicit polynomial counterexample in dimension $3$ \cite{CEGHM}. The conjecture that all automorphisms of $k[x,y,z]$ are tame fell to the wildness of the Nagata automorphism \cite{SU}. $JC_n$ itself fell in dimension $3$ \cite{Alpoge}. In each case the optimistic statement was defensible only because nothing was known to contradict it, which is precisely the situation of \cref{ROD}: by \cref{invariants}, every currently computable invariant of $G_n$ factors through classical shadows, so the conjecture is exactly as strong as our current blindness. Its function is to be a sharp target. Following the strategy that produced the seed itself --- pose the optimistic statement explicitly and search hard for the counterexample --- a disproof would be at least as valuable as a proof, and \cref{targets} is written to make the target as easy to hit as possible.
+\end{remark}
+
+\section{Disproof targets and certificates\label{targets}}
+
+This section is the specification. It is addressed to any future reader, human or automated, undertaking the search; it assumes only the definitions above, and it states what a counterexample to \cref{ROD} is and how to certify one. It deliberately stops short of carrying out any of the attacks.
+
+\subsection{What a disproof consists of}
+
+A disproof of the orbit form is an endomorphism $\psi \in \End(W_n)$, $n \geq 3$, together with a proof that $\psi \notin L_n$. Since membership in $L_n$ is not decidable by inspection, in practice a proof of non-membership means: a function $\iota$ on $\End(W_n)$, constant on bi-invariant classes, computable on both $\psi$ and on all of $L_n$, with $\iota(\psi) \notin \iota(L_n)$. A disproof of the monoid form may instead exhibit a bi-invariant subset not in the generated family, or show the generated family is too small in some structural sense (see R3). The three routes below are ordered by expected accessibility.
+
+\subsection{Route R1: the degree invariant, through the classical window}
+
+By \cref{degree}, in the Poisson model $P_3(k)$ the degree $\deg[\Phi] \in \NN_{>0}$ is bi-invariant and multiplicative, and every reachable class on the classical side has degree in $\setof{3^m \st m \geq 0}$, since each stabilized seed contributes a factor of exactly $3$ and automorphisms contribute $1$. Therefore:
+
+\emph{Target.} A Keller map $F'$ on $\mathbb{A}^3$ (constant nonzero Jacobian, normalized to $1$ by \cref{vC}) with generic fiber degree $d(F') \notin \setof{1, 3, 9, 27, \dots}$ --- for instance $d(F') \in \setof{2, 4, 5}$ --- disproves the Poisson analogue of the orbit form immediately, via $\Phi_{F'}$ and \cref{lift}. Announced follow-on constructions already claim families of counterexamples in $\mathbb{A}^3$ of every generic fiber degree $\geq 3$ \cite{fam}; if any member of degree not a power of $3$ is confirmed, this route closes on the classical side at once. To transport the conclusion to $G_n$ itself and kill \cref{ROD} as stated, combine with a solution to \cref{qdegree}; alternatively, any direct proof that some bi-invariant quantum invariant refines $d$ suffices.
+
+\emph{Certificate.} For a candidate $F'$: (i) verify $\det JF' \in k^\times$ symbolically; (ii) compute $d(F') = [k(x,y,z):k(F')]$ by Gr\"obner basis elimination, or by exhibiting a fiber with $d(F')$ points together with the cubic-style resultant relations bounding the degree above; (iii) record that $d(F')$ is not a power of $3$.
+
+\subsection{Route R2: genuinely quantum classes}
+
+The reachable set $L_n$ is manufactured entirely from one commutative seed through the first-order lift. Nothing known forces a general endomorphism of $W_n$ to be of this shape.
+
+\emph{Target.} An endomorphism $\psi \in \End(W_n)$ that is not the lift of any polynomial map, and a bi-invariant invariant separating it from $L_n$. Candidate invariants to develop, in increasing ambition: the isomorphism type of $W_n$ as a bimodule over $\text{im}\,\psi$; growth data (Gelfand--Kirillov or Bernstein) of $W_n$ relative to the image; the geometry of the branching locus of the symbol, e.g.\ the discriminant $\Delta$ and the loci $p, q, r$ of \cite{Speyer} as bi-invariant data of a class rather than of a map; and reduction modulo $p$, where endomorphisms of $W_n(\overline{\mathbb{F}_p})$ act on the huge center and pick up characteristic-$p$ symplectic invariants in the manner of \cite{BKK, Tsu}. The last is the most promising machine for invariants that do \emph{not} factor through the characteristic-zero classical shadow, which is exactly what \cref{epistemic} says we are missing.
+
+\subsection{Route R3: size}
+
+\emph{Target.} Show $G_n$ is too large to be reachable: for example, a family $\setof{\psi_t}$ of endomorphisms over a positive-dimensional base together with an invariant as in R2 that is constant on classes, varies continuously in $t$, and takes values a single reachable class cannot absorb. Word length in $L_n$ is countable data over each automorphism letter; a genuinely continuous modulus not accounted for by the automorphism letters would contradict the orbit form. This route requires no single explicit exotic $\psi$, only a well-behaved invariant, and may be the correct level of generality if R1 and R2 both stall.
+
+\subsection{Structure problems accompanying the search}
+
+\begin{problem}[Quantum degree\label{qdegree}]
+Construct a bi-invariant, multiplicative $\deg: G_n \to \NN_{>0}$ with $\deg[\psi_F] = d(F)$ for all lifts. Suggested sources: dimension of the skew field of fractions of $W_n$ over that of the image; or the degree of the induced map on centers after reduction mod $p$, shown independent of $p \gg 0$. A solution makes \cref{degree} quantum, proves the powers of $[c_{\text{bad}}]$ pairwise distinct in $G_n$, and upgrades any R1 counterexample to a full disproof of \cref{ROD}.
+\end{problem}
+
+\begin{problem}[Isotropy of the seed\label{isoproblem}]
+Compute $\Iso(c_{\text{bad}})$ exactly. \Cref{isotropy} shows it contains $\mathbb{G}_m$; the question is whether the grading of \cite{Speyer} accounts for all of it. Isotropy groups are class invariants, so a mismatch of isotropy is itself a separation tool for R2.
+\end{problem}
+
+\begin{problem}[The product union\label{unionproblem}]
+Describe the hyperoperation at the seed: is $[c_{\text{bad}}] \cdot [c_{\text{bad}}] = \bigcup_a [\psi_{F_1} \, a \, \psi_{F_1}]$ a single class, finitely many, or infinitely many? Equivalently, how does the class of $\psi_{F_1} a \psi_{F_1}$ vary with the middle letter $a$? Any invariant solving \cref{qdegree} is constant on this union, so finer tools are needed; conversely, infinitude here would already show the linearization of \cref{monoid} needs completed coefficients.
+\end{problem}
+
+\begin{problem}[Compatibility along the chain]
+Determine whether the stabilization maps $G_n \to G_{n+1}$ are injective, and whether reachability is stable under de-stabilization: can an unreachable class in $G_n$ become reachable in $G_{n+1}$? A negative answer localizes the search for R2 to $n = 3$.
+\end{problem}
+
+\begin{thebibliography}{9}
+
+\bibitem{Alpoge} L. Alp\"oge, announcement of an explicit counterexample to the Jacobian conjecture in dimension $3$, 19 July 2026. The example was produced in an exchange with Anthropic's Claude (Fable) model on a problem suggested by A. Mathew.
+
+\bibitem{Speyer} D. Speyer, \emph{The new counterexample to the Jacobian conjecture}, Secret Blogging Seminar, 20 July 2026. \url{https://sbseminar.wordpress.com/2026/07/20/the-new-counterexample-to-the-jacobian-conjecture/}
+
+\bibitem{Tao} T. Tao, \emph{A digestion of the Jacobian conjecture counterexample}, blog post, 21 July 2026. \url{https://terrytao.wordpress.com/2026/07/21/a-digestion-of-the-jacobian-conjecture-counterexample/}
+
+\bibitem{fam} Announced families of counterexamples in $\mathbb{A}^3$ of each generic fiber degree $\geq 3$; unrefereed public verification materials, e.g. \url{https://jacobianfun.org/jacobian-explained}. Cited as a target for confirmation, not as established.
+
+\bibitem{BCW} H. Bass, E. H. Connell, D. Wright, \emph{The Jacobian conjecture: reduction of degree and formal expansion of the inverse}, Bull. Amer. Math. Soc. 7 (1982), 287--330.
+
+\bibitem{CvdD} E. H. Connell, L. van den Dries, \emph{Injective polynomial maps and the Jacobian conjecture}, J. Pure Appl. Algebra 28 (1983), 235--239.
+
+\bibitem{BKK} A. Belov-Kanel, M. Kontsevich, \emph{The Jacobian conjecture is stably equivalent to the Dixmier conjecture}, Mosc. Math. J. 7 (2007), no. 2, 209--218.
+
+\bibitem{Tsu} Y. Tsuchimoto, \emph{Endomorphisms of Weyl algebra and $p$-curvatures}, Osaka J. Math. 42 (2005), 435--452.
+
+\bibitem{CEGHM} A. Cima, A. van den Essen, A. Gasull, E. Hubbers, F. Ma\~nosas, \emph{A polynomial counterexample to the Markus--Yamabe conjecture}, Nonlinear Anal. 30 (1997), 783--789.
+
+\bibitem{SU} I. P. Shestakov, U. U. Umirbaev, \emph{The tame and the wild automorphisms of polynomial rings in three variables}, J. Amer. Math. Soc. 17 (2004), 197--227.
+
+\bibitem{vdE} A. van den Essen, \emph{Polynomial Automorphisms and the Jacobian Conjecture}, Progress in Mathematics 190, Birkh\"auser, 2000.
+
+\end{thebibliography}
+
+\end{document}
